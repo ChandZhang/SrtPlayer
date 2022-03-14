@@ -2,6 +2,7 @@ package com.github.thibaultbee.srtplayer
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import com.github.thibaultbee.srtplayer.player.SrtDataSourceFactory
@@ -12,14 +13,15 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
+    var tag:String = "MainActivityViewModel";
     var _player: Player? = null
-    val player: Player
+    val player: Player?
         get() {
             _player?.let {
                 releasePlayer(it)
             }
             _player = buildPlayer()
-            return _player!!
+            return _player
         }
 
     private fun releasePlayer(player: Player) {
@@ -27,12 +29,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         player.release()
     }
 
-    private fun buildPlayer(): Player {
+    private fun buildPlayer(): Player? {
         val url = PreferenceManager.getDefaultSharedPreferences(getApplication())
             .getString((getApplication() as Context).getString(R.string.srt_endpoint_key), null)
         val passphrase = PreferenceManager.getDefaultSharedPreferences(getApplication())
             .getString((getApplication() as Context).getString(R.string.srt_passphrase_key), null)
-
+        Log.e(tag, "url : $url");
+        Log.e(tag, "passphrase : $passphrase");
+        if(url==null){
+            return null
+        }
         val mediaItem = MediaItem.Builder()
             .setUri(url)
             /**

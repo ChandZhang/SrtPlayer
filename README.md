@@ -11,17 +11,16 @@ It is only a demo project, it is not recommend to use it in production.
 
 ## Test
 
-In order to test SrtPlayer, I had 2 tools running:
+In order to test SrtPlayer, I had 1 tools running:
 
-```bash
-srt-live-transmit srt://:1234 srt://:9998 -
-```
+1. startup sls server
+2. run shell 
+   ```bash
+    ffmpeg -f lavfi -re -i smptebars=duration=300:size=1280x720:rate=30 -f lavfi -re -i sine=frequency=1000:duration=60:sample_rate=44100 -pix_fmt yuv420p -c:v libx264 -b:v 1000k -g 30 -keyint_min 40 -profile:v baseline -preset veryfast -f mpegts "srt://192.168.1.102:9999?streamid=uplive.sls.com/live/srt1stream"
+    ```
 
-and
-
-```bash
-ffmpeg -f lavfi -re -i smptebars=duration=300:size=1280x720:rate=30 -f lavfi -re -i sine=frequency=1000:duration=60:sample_rate=44100 -pix_fmt yuv420p -c:v libx264 -b:v 1000k -g 30 -keyint_min 40 -profile:v baseline -preset veryfast -f mpegts "srt://127.0.0.1:1234?pkt_size=1316"
-```
+3. app setting:
+    player url : srt://192.168.1.102:9999?streamid=live.sls.com/live/srt1stream
 
 Then press play on the video player.
 

@@ -27,9 +27,10 @@ class SrtDataSource :
         socket = Socket().apply {
             setSockFlag(SockOpt.TRANSTYPE, Transtype.LIVE)
             setSockFlag(SockOpt.PAYLOADSIZE, PAYLOAD_SIZE)
+            dataSpec.uri.getQueryParameter(SockOpt.STREAMID.name.lowercase(Locale.getDefault()))?.let { setSockFlag(SockOpt.STREAMID, it) }
             dataSpec.key?.let { setSockFlag(SockOpt.PASSPHRASE, it) }
 
-            Log.i("SrtDataSource", "Connecting to ${dataSpec.uri.host}:${dataSpec.uri.port}.")
+            Log.e("SrtDataSource", "Connecting to ${dataSpec.uri.host}:${dataSpec.uri.port}.")
             dataSpec.uri.host?.let { connect(it, dataSpec.uri.port) }
                 ?: throw IOException("Host is not valid")
         }
